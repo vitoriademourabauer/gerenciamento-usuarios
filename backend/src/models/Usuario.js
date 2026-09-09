@@ -12,27 +12,27 @@ Usuario.init(
         },
         nome: {
             type: DataTypes.STRING,
-            allownull: false,
+            allowNull: false,
         },
         email: {
             type: DataTypes.STRING,
-            allownull: false,
+            allowNull: false,
             unique: true,
         },
         senha: {
             type: DataTypes.STRING,
-            allownull: false,
+            allowNull: false,
         },
         foto: {
             type: DataTypes.TEXT('long'),
-            allownull: true,
+            allowNull: true,
         },
     },
     {
         sequelize,
-        modelNAme: 'Usuario',
+        modelName: 'Usuario',
         tableName: 'usuarios',
-        timestamp: true
+        timestamps: true
     }
 );
 

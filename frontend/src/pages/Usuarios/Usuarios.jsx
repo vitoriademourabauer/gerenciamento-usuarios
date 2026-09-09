@@ -1,103 +1,171 @@
 import { useState, useEffect } from 'react';
-import { getUsuarios } from '../../services/usuarioService';
+import { getUsuarios, getUsuario, deleteUsuario, createUsuario, updateUsuario } from '../../services/usuarioService';
+import './Usuarios.css';
 
 function Usuarios() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchUsuarios = async () => {
-      try {
-        const data = await getUsuarios();
-        setUsers(data.data || []);
-      } catch (err) {
-        setError(err.response?.data?.err || err.message || 'Erro ao buscar usuários');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const [searchId, setSearchId] = useState('');
+  const [formData, setFormData] = useState({ id: null, nome: '', email: '', senha: '' });
 
+  const fetchUsuarios = async () => {
+    setLoading(true);
+    try {
+      const data = await getUsuarios();
+      setUsers(data.data || []);
+    } catch (err) {
+      setError(err.response?.data?.err || err.message || 'Erro ao buscar usuários');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUsuarios();
   }, []);
 
+  const handleSearch = async () => {
+    if (!searchId) return fetchUsuarios();
+    
+    setLoading(true);
+    try {
+      const data = await getUsuario(searchId);
+      setUsers(data ? [data] : []);
+      setError(null);
+    } catch (err) {
+      setError('Usuário não encontrado.');
+      setUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const confirm = window.confirm('Tem certeza que deseja excluir?');
+    if (confirm) {
+      try {
+        await deleteUsuario(id);
+        if (formData.id === id) handleCancel(); 
+        fetchUsuarios();
+      } catch (err) {
+        alert('Erro ao excluir usuário.');
+      }
+    }
+  };
+
+  const handleEdit = (user) => {
+    setFormData(user);
+    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+  };
+
+  const handleCancel = () => {
+    setFormData({ id: null, nome: '', email: '', senha: '' });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (formData.id) {
+        await updateUsuario(formData.id, formData);
+      } else {
+        await createUsuario(formData);
+      }
+      handleCancel();
+      fetchUsuarios();
+    } catch (err) {
+      alert('Erro ao salvar usuário.');
+    }
+  };
 
     return (
-    <div className="page-container">
-        <h1>Lista de Usuários</h1>
+        <div className="page-container">
+            <h1>Gerenciamento de Usuários</h1>
 
-        {loading && <div style={styles.message}>Carregando usuários...</div>}
+            <div className="form-container">
+                <h2>{formData.id ? 'Editar Usuário' : 'Novo Usuário'}</h2>
+                <form onSubmit={handleSubmit} className="form">
+                    <input
+                        type="text"
+                        placeholder="Nome"
+                        required
+                        value={formData.nome}
+                        onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                        className="input"
+                    />
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="input"
+                    />
 
-        {error && <div style={styles.message}>Ops! {error}</div>}
+                    {!formData.id && (
+                        <input
+                            type="password"
+                            placeholder="Senha"
+                            required
+                            value={formData.senha}
+                            onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
+                            className="input"
+                        />
+                    )}
+                    
+                    <div>
+                        {formData.id && (
+                            <button type="button" onClick={handleCancel} className="btn btn-secondary" style={{marginRight: '8px'}}>Cancelar</button>
+                        )}
+                        <button type="submit" className="btn btn-primary">
+                            {formData.id ? 'Salvar' : 'Cadastrar'}
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-        {!loading && !error && users.length === 0 && (
-        <div style={styles.message}>Nenhum usuário encontrado no momento.</div>
-        )}
+            <hr className="divider" />
 
-        {!loading && !error && users.length > 0 && (
-        <ul style={styles.usersList}>
-            {users.map(user => (
-            <li key={user.id} style={styles.userCard}>
-                <div style={styles.userInfo}>
-                <span style={styles.userName}>{user.nome}</span>
-                <span style={styles.userEmail}>{user.email}</span>
-                </div>
-                <div style={styles.statusBadge}>ID #{user.id}</div>
-            </li>
-            ))}
-        </ul>
-        )}
-    </div>
+            <div className="search-bar">
+                <input
+                    type="number"
+                    placeholder="Buscar por ID..."
+                    value={searchId}
+                    onChange={(e) => setSearchId(e.target.value)}
+                    className="input"
+                />
+                <button onClick={handleSearch} className="btn btn-primary">Buscar</button>
+            </div>
+
+            {loading && <div className="message">Carregando usuários...</div>}
+
+            {error && <div className="message">Ops! {error}</div>}
+
+            {!loading && !error && users.length === 0 && (
+                <div className="message">Nenhum usuário encontrado no momento.</div>
+            )}
+
+            {!loading && !error && users.length > 0 && (
+                <ul className="users-list">
+                    {users.map(user => (
+                        <li key={user.id} className="user-card">
+                            <div className="user-info">
+                                <span className="user-name">{user.nome}</span>
+                                <span className="user-email">{user.email}</span>
+                            </div>
+
+                            <div className="actions">
+                                <span className="status-badge">ID #{user.id}</span>
+                                <button onClick={() => handleEdit(user)} className="btn btn-warning">Editar</button>
+                                <button onClick={() => handleDelete(user.id)} className="btn btn-danger">Excluir</button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
     );
 }
-
-const styles = {
-  usersList: {
-    listStyleType: 'none',
-    padding: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-    width: '100%',
-  },
-  userCard: {
-    background: 'var(--card-bg)',
-    border: '1px solid var(--border-color)',
-    padding: '1rem 1.5rem',
-    borderRadius: '12px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    transition: 'all 0.3s ease',
-  },
-  userInfo: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  userName: {
-    fontSize: '1.2rem',
-    fontWeight: '600',
-    color: 'var(--text-primary)',
-    marginBottom: '4px',
-  },
-  userEmail: {
-    fontSize: '0.9rem',
-    color: 'var(--text-secondary)',
-  },
-  statusBadge: {
-    background: 'var(--badge-bg)',
-    color: 'var(--primary-color)',
-    padding: '6px 12px',
-    borderRadius: '20px',
-    fontSize: '0.8rem',
-    fontWeight: '600',
-  },
-  message: {
-    textAlign: 'center',
-    color: 'var(--text-secondary)',
-    margin: '2rem 0',
-    fontSize: '1.2rem',
-  },
-};
 
 export default Usuarios;

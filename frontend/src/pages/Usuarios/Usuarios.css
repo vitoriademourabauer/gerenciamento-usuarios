@@ -1,0 +1,138 @@
+.page-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-container {
+  background: var(--card-bg, #f8f9fa);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color, #ddd);
+}
+
+.form {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-right: 8px;
+}
+
+.divider {
+  margin: 25px 0;
+  border: none;
+  border-top: 1px solid #eee;
+}
+
+.search-bar {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.users-list {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.user-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border-color, #ddd);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.user-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* Efeito suave ao passar o mouse */
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary, #333);
+  margin-bottom: 4px;
+}
+
+.user-email {
+  font-size: 0.9rem;
+  color: var(--text-secondary, #666);
+}
+
+.status-badge {
+  background: var(--badge-bg, #e0f7fa);
+  color: var(--primary-color, #007bff);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.message {
+  text-align: center;
+  color: var(--text-secondary, #666);
+  margin: 2rem 0;
+  font-size: 1.2rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.btn-primary {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+}
+
+.btn-secondary {
+  padding: 8px 16px;
+  background: #6c757d;
+  color: white;
+}
+
+.btn-warning {
+  padding: 6px 12px;
+  background: #ffc107;
+  color: black;
+}
+
+.btn-danger {
+  padding: 6px 12px;
+  background: #dc3545;
+  color: white;
+}
