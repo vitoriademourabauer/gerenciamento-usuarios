@@ -10,6 +10,13 @@ function Usuarios() {
   const [searchId, setSearchId] = useState('');
   const [formData, setFormData] = useState({ id: null, nome: '', email: '', senha: '' });
 
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+
   const fetchUsuarios = async () => {
     setLoading(true);
     try {
@@ -22,9 +29,11 @@ function Usuarios() {
     }
   };
 
+
   useEffect(() => {
     fetchUsuarios();
   }, []);
+
 
   const handleSearch = async () => {
     if (!searchId) return fetchUsuarios();
@@ -42,6 +51,7 @@ function Usuarios() {
     }
   };
 
+
   const handleDelete = async (id) => {
     const confirm = window.confirm('Tem certeza que deseja excluir?');
     if (confirm) {
@@ -55,14 +65,17 @@ function Usuarios() {
     }
   };
 
+
   const handleEdit = (user) => {
     setFormData(user);
     window.scrollTo({ top: 0, behavior: 'smooth' }); 
   };
 
+
   const handleCancel = () => {
     setFormData({ id: null, nome: '', email: '', senha: '' });
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,6 +92,7 @@ function Usuarios() {
     }
   };
 
+  
     return (
         <div className="page-container">
             <h1>Gerenciamento de Usuários</h1>
@@ -91,7 +105,7 @@ function Usuarios() {
                         placeholder="Nome"
                         required
                         value={formData.nome}
-                        onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                        onChange={handleChange}
                         className="input"
                     />
                     <input
@@ -99,20 +113,17 @@ function Usuarios() {
                         placeholder="Email"
                         required
                         value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        onChange={handleChange}
                         className="input"
                     />
-
-                    {!formData.id && (
-                        <input
-                            type="password"
-                            placeholder="Senha"
-                            required
-                            value={formData.senha}
-                            onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
-                            className="input"
-                        />
-                    )}
+                    <input
+                        type="password"
+                        placeholder="Senha"
+                        required
+                        value={formData.senha}
+                        onChange={handleChange}
+                        className="input"
+                    />
                     
                     <div>
                         {formData.id && (
