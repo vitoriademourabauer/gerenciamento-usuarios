@@ -35,6 +35,11 @@ Usuario.init(
         timestamps: true,
         defaulScope: {
             attributes: { exclude: ['senha'] }
+        },
+        scopes: {
+            comSenha: {
+                attributes: { include: ['senha'] }
+            }
         }
     }
 );
