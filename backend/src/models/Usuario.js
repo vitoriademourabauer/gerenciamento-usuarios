@@ -33,7 +33,7 @@ Usuario.init(
         modelName: 'Usuario',
         tableName: 'usuarios',
         timestamps: true,
-        defaulScope: {
+        defaultScope: {
             attributes: { exclude: ['senha'] }
         },
         scopes: {
