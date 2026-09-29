@@ -18,3 +18,5 @@ const login = async (req, res) => {
         return res.status(500).json({ error: 'Erro interno no login' });
     }
 };
+
+module.exports = { login };
