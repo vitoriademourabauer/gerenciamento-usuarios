@@ -37,6 +37,7 @@ Aplicação Full Stack de painel administrativo para gerenciamento de usuários,
 │       ├── config        # Configuração do banco de dados para o sequelize-cli
 │       ├── controllers   # Tratamento das requisições e respostas
 │       ├── instances     # Conexão com o MySQL
+│       ├── middlewares   # Funções intermediárias
 │       ├── migrations    # Criação e versionamento das tabelas
 │       ├── models        # Modelos do Sequelize
 │       ├── routes        # Definição das rotas da API
